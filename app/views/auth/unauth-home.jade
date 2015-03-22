@@ -1,0 +1,33 @@
+extends ../layout
+
+block title
+	| Login
+
+block content
+	div.jumbotron
+		div.container
+			div.col-md-8
+				img.img-responsive(src='http://2.bp.blogspot.com/-WEvY79nRftg/VOJ7YxIORDI/AAAAAAAAA58/ealr1TvMCLo/s1600/VeryLoudCloud.png')
+				div.col-md-6
+					h2 Current Features
+					p VeryLoudCloud has support for student, teacher, and administrator accounts.  Join today and enroll in a class.
+				div.col-md-6
+					h2 Coming Soon
+					p Soon, there will be class-specific pages and places where teachers can upload files for students.
+			div.col-md-4#login-reg-div
+				h1.text-center Login
+				form(action="/login", method="post")
+					div.form-group
+						label(for='username') Username:
+						input.form-control#username(type="text", name="username", placeholder="Enter username", required, autofocus, autocomplete='off')
+						br
+					div.form-group
+						label(for='password') Password:
+						input.form-control#password(type="password", name="password", placeholder="Password", required, autocomplete='off')
+					button.btn.btn-success.waves-effect.waves-light(type="submit") Login &#187;
+				br
+				a(href='/register') Create an account
+				br
+				br
+				p.text-danger #{message}
+	div#particles-js

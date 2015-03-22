@@ -1,0 +1,14 @@
+extends layout
+
+block title
+	| 404 - Page Not Found
+
+block content
+	div.container
+		div.jumbotron.text-center
+			h1 Error 404
+				span.small  Page Not Found
+			p We couldn't find the page you were looking for.
+			div.btn-toolbar
+				a.btn.btn-info.waves-effect.waves-light(onclick='window.history.back()') Go Back
+				a.btn.btn-primary.waves-effect.waves-light(href='/') Go Home

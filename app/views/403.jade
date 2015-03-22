@@ -1,0 +1,14 @@
+extends layout
+
+block title
+	| 403 - Access Denied
+
+block content
+	div.jumbotron
+		div.container.text-center
+			h1 Error 403
+				span.small  Access Denied
+			p You can't do that :(
+			div.btn-toolbar
+				a.btn.btn-info.waves-effect.waves-light(onclick='window.history.back()') Go Back
+				a.btn.btn-primary.waves-effect.waves-light(href='/') Go Home

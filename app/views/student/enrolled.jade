@@ -1,0 +1,70 @@
+extends ../layout
+
+block title
+	| Enrolled Classes
+	
+block head-links
+	script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
+	script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js')
+	script(src='/js/modules/student/services/users.js')
+	script(src='/js/modules/student/services/classes.js')
+	script(src='/js/modules/student/services/assignments.js')
+	script(src='/js/modules/student/controllers/main.js')
+	script(src='/js/modules/student/core.js')
+
+block nav-links
+	if user
+		li
+			a(href='/') Home
+		li.disabled
+			a Todo List
+	if user.role === 'student'
+		li.dropdown
+			a.dropdown-toggle(href='#', data-toggle='dropdown') Classes
+				span.caret
+			ul.dropdown-menu
+				li.active
+					a(href='/classes/enrolled') My Classes
+				li
+					a(href='/classes') Browse Classes
+				li
+					a(href='/calendar') Calendar
+	if user.role === 'administrator'
+		li.dropdown
+			a.dropdown-toggle(href='#', data-toggle='dropdown') Admin
+				span.caret
+			ul.dropdown-menu
+				li
+					a(href='/admin') Admin Dashboard
+				li
+					a(href='/admin/users') User Control
+				li
+					a(href='/admin/classes') Class Control
+
+block content
+	div.jumbotron(ng-app='classesPage', ng-controller='classController')
+		div.container
+			h1.text-center Class Dashboard
+			div.row
+				div.col-md-6
+					h2 My Classes
+					p(ng-if='joinedClasses.length === 0') You have no classes.  <a href='/classes'>Join one</a> and start learning today!
+					table.table.table-bordered(ng-if='joinedClasses.length > 0')
+						thead
+							tr
+								th View
+								th Class Name
+								th Teacher Name
+								th Students Enrolled
+								th Department
+						tbody
+							tr(ng-repeat='joinedClass in joinedClasses | filter:searchText')
+								td
+									a.btn.btn-success.waves-effect.waves-light(ng-href='/classes/{{joinedClass._id}}')
+										span.glyphicon.glyphicon-search
+								td {{ joinedClass.className  }}
+								td {{ joinedClass.teacher  }}
+								td {{ joinedClass.students.length  }}
+								td {{ joinedClass.department  }}
+				div.col-md-6
+					h2 Assignments Calendar

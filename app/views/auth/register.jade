@@ -1,0 +1,28 @@
+extends ../layout
+
+block title
+	| Register
+
+block content
+	div.jumbotron
+		div.container
+			div.col-md-4.col-md-offset-4#login-reg-div
+				h1.text-center Register
+				p.text-danger.text-center #{message}
+				form(action='/register', method='post')
+					div.form-group
+						label(for='username') Username
+						input.form-control#username(type='text', name='username', placeholder='Username', required, autofocus)
+					div.form-group
+						label(for='password') Password
+						input.form-control#password(type='password', name='password', placeholder='Enter password', required)
+					div.form-group
+						label(for='email') Email
+						input.form-control#email(type='email', name='email', placeholder='Email', required)
+					div.form-group
+						label(for='firstName') First Name
+						input.form-control#firstName(type='text', name='firstName', placeholder='First Name', required)
+					div.form-group
+						label(for='lastName') Last Name
+						input.form-control#lastName(type='text', name='lastName', placeholder='Last Name', required)
+					button.btn.btn-primary.waves-effect.waves-light(type='submit') Register &#187;

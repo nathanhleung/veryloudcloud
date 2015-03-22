@@ -1,0 +1,101 @@
+extends layout
+
+block title
+	| Calendar
+	
+block head-links
+	script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
+	script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js')
+	script(src='/js/modules/student/services/users.js')
+	script(src='/js/modules/student/services/classes.js')
+	script(src='/js/modules/student/services/assignments.js')
+	script(src='/js/modules/student/controllers/main.js')
+	script(src='/js/modules/student/core.js')
+
+block nav-links
+	if user
+		li
+			a(href='/') Home
+		li.disabled
+			a Todo List <!-- (href='/todos') -->
+	if user.role === 'student'
+		li.dropdown
+			a.dropdown-toggle(href='#', data-toggle='dropdown') Classes
+				span.caret
+			ul.dropdown-menu
+				li
+					a(href='/classes/enrolled') My Classes
+				li
+					a(href='/classes') Browse Classes
+				li.active
+					a(href='/calendar') Calendar
+	if user.role === 'teacher'
+		li.dropdown
+			a.dropdown-toggle(href='#', data-toggle='dropdown') Teacher
+				span.caret
+			ul.dropdown-menu
+				li
+					a(href='/teacher') Teacher Dashboard
+				li
+					a(href='/teacher/classes') Classes
+				li
+					a(href='/teacher/students') Student Overview / Grades
+	if user.role === 'administrator'
+		li.dropdown
+			a.dropdown-toggle(href='#', data-toggle='dropdown') Admin
+				span.caret
+			ul.dropdown-menu
+				li
+					a(href='/admin') Admin Dashboard
+				li
+					a(href='/admin/users') User Control
+				li
+					a(href='/admin/classes') Class Control
+
+block content
+	div.jumbotron(ng-app='classesPage', ng-controller='calendarController')
+		div.container
+			h1 Calendar
+			h2 Click an assignment for more information
+			div.row
+				div.col-md-12
+					table.table.table-bordered(ng-if='allAssignments.length')
+						thead#dateHeaders
+							tr
+								<!-- js generates the week -->
+						tbody#calendar-body
+							tr
+								td
+									div(ng-repeat='assignment in allAssignments')
+										p(ng-if='isInCal(0, formatDate(assignment.dueDate))')
+											a(ng-href='/classes/{{assignment.classId}}') {{ assignment.name }}
+								td
+									div(ng-repeat='assignment in allAssignments')
+										p(ng-if='isInCal(1, formatDate(assignment.dueDate))')
+											a(ng-href='/classes/{{assignment.classId}}') {{ assignment.name }}
+								td
+									div(ng-repeat='assignment in allAssignments')
+										p(ng-if='isInCal(2, formatDate(assignment.dueDate))')
+											a(ng-href='/classes/{{assignment.classId}}') {{ assignment.name }}
+								td
+									div(ng-repeat='assignment in allAssignments')
+										p(ng-if='isInCal(3, formatDate(assignment.dueDate))')
+											a(ng-href='/classes/{{assignment.classId}}') {{ assignment.name }}
+								td
+									div(ng-repeat='assignment in allAssignments')
+										p(ng-if='isInCal(4, formatDate(assignment.dueDate))')
+											a(ng-href='/classes/{{assignment.classId}}') {{ assignment.name }}
+								td
+									div(ng-repeat='assignment in allAssignments')
+										p(ng-if='isInCal(5, formatDate(assignment.dueDate))')
+											a(ng-href='/classes/{{assignment.classId}}') {{ assignment.name }}
+								td
+									div(ng-repeat='assignment in allAssignments')
+										p(ng-if='isInCal(6, formatDate(assignment.dueDate))')
+											a(ng-href='/classes/{{assignment.classId}}') {{ assignment.name }}
+								td
+									div(ng-repeat='assignment in allAssignments')
+										p(ng-if='isInCal("upcoming", formatDate(assignment.dueDate))')
+											a(ng-href='/classes/{{assignment.classId}}') {{ assignment.name }} 
+											br
+											span Due {{ formatDate(assignment.dueDate) }}

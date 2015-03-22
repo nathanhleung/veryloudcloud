@@ -1,0 +1,87 @@
+extends ../layout
+
+block title
+	| View Class
+	
+block head-links
+	script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
+	script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js')
+	script(src='/js/modules/student/services/users.js')
+	script(src='/js/modules/student/services/classes.js')
+	script(src='/js/modules/student/services/assignments.js')
+	script(src='/js/modules/student/controllers/main.js')
+	script(src='/js/modules/student/core.js')
+
+block nav-links
+	if user
+		li
+			a(href='/') Home
+		li.disabled
+			a Todo List
+	if user.role === 'student'
+		li.dropdown
+			a.dropdown-toggle(href='#', data-toggle='dropdown') Classes
+				span.caret
+			ul.dropdown-menu
+				li
+					a(href='/classes/enrolled') My Classes
+				li
+					a(href='/classes') Browse Classes
+				li
+					a(href='/calendar') Calendar
+	if user.role === 'administrator'
+		li.dropdown
+			a.dropdown-toggle(href='#', data-toggle='dropdown') Admin
+				span.caret
+			ul.dropdown-menu
+				li
+					a(href='/admin') Admin Dashboard
+				li
+					a(href='/admin/users') User Control
+				li
+					a(href='/admin/classes') Class Control
+
+block content
+	div.jumbotron(ng-app='classesPage')
+		div.container
+			div(ng-controller='classController')
+				h1.text-center {{ class[0].className }} #[span.small {{class[0].department}}]
+				h2.text-center Taught by {{ class[0].teacher }}
+			div.row
+				div.col-md-6(ng-controller='classController')
+					h2 Student List
+					div.form-inline
+						p Search:
+							input.form-control(ng-model='search.$')
+					table.table.table-bordered
+						thead
+							tr
+								th
+									a(href='', ng-click='predicate="student"') Student Username
+								th
+									a(href='') Student Name
+						tbody
+							tr(ng-repeat='student in class[0].students | filter:search')
+								td {{ student  }}
+								td {{ student.username || "Name not available" }} <!-- use UserService and getUser(); -->
+				div.col-md-6(ng-controller='assignmentController')
+					h2 Current Assignments
+					p(ng-if='!assignments.length') No assignments yet.
+					table.table.table-bordered(ng-if='assignments.length')
+						thead
+							tr
+								th
+									a(href='', ng-click='predicate="name"') Assignment Title
+								th Assignment Description
+								th
+									a(href='', ng-click='predicate="dueDate"') Due Date
+								th Link/Download
+						tbody
+							tr(ng-repeat='assignment in assignments | orderBy:predicate')
+								td {{ assignment.name }}
+								td(ng-if='assignment.description') {{ assignment.description }}
+								td(ng-if='!assignment.description') No description
+								td {{ formatDate(assignment.dueDate) }}
+								td(ng-if='assignment.link')
+									a.btn.btn-success.waves-effect.waves-light(ng-href='{{assignment.link}}', target='_blank') #[span.glyphicon.glyphicon-save]
+								td(ng-if='!assignment.link') No link

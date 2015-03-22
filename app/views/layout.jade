@@ -1,0 +1,76 @@
+doctype html
+html
+	head
+		meta(charset='utf-8')
+		meta(name='viewport', content='width=device-width, initial-scale=1')
+		title
+			block title
+		link(href='/lib/css/bootstrap.min.css' rel='stylesheet')
+		link(rel="stylesheet", href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css")
+		link(href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.1.6/nprogress.min.css", rel="stylesheet")
+		link(href='/styles/styles.less', rel='stylesheet/less')
+		link(href='//i.imgur.com/ao82cU0.png?2', rel='icon')
+		script(src='/lib/js/jquery.min.js') <!-- load jQuery before angular so we can use selectors -->
+		block head-links
+	body
+		nav.navbar-inverse.navbar-fixed-top
+			div.container-fluid
+				div.navbar-header
+					button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar-content')
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+					a.navbar-brand(href='/')
+						img(src='http://i.imgur.com/rUiusmt.png?2')
+				div.collapse.navbar-collapse#navbar-content
+					ul.nav.navbar-nav
+						block nav-links
+					ul.nav.navbar-nav.navbar-right
+						if user
+							li.dropdown
+								a.dropdown-toggle(href='#', data-toggle='dropdown') #{user.firstName} #{user.lastName} 
+									span.caret
+								ul.dropdown-menu
+									li
+										a(href='/account') My Account
+									li
+										a(href='/signout') Sign Out
+						else
+							li
+								a(href='/register') Register
+							li
+								a(href='/login') Login
+		block content
+		div.container
+			button.close(type='button', data-dismiss='alert') &times;
+			h4 If anything doesn't work...
+			p Please tell me (Nathan) if anything doesn't work so then I can attempt to fix it!
+			br
+			h4 To do:
+			ul
+				li Teachers can currently see and delete any class; soon the class page will only show classes which that teacher teaches.
+				li File uploads?
+				li You can't change your password
+				li I'm not sure if I'll have time, but if there is time I will add a forum.
+			br
+			br
+			
+		div#chatbox
+			div#chats-container
+				p#chat-header Chat 
+					span.small
+						span#online-count 1
+						|  online
+				ul#chats
+			form#chat-box-form
+				div.input-group#chat-input-group
+					input.form-control#chat-input(placeholder='Enter message', autocomplete='off')
+					span.input-group-btn
+						button.btn.btn-success.waves-effect.waves-light#chat-send-btn(type='submit') Send
+		
+		script(src='//cdnjs.cloudflare.com/ajax/libs/materialize/0.95.3/js/materialize.min.js')
+		script(src='/lib/js/bootstrap.min.js')
+		script(src='//cdnjs.cloudflare.com/ajax/libs/nprogress/0.1.6/nprogress.min.js')
+		script(src='/lib/js/less.min.js')
+		script(src='/socket.io/socket.io.js')
+		script(src='/js/scripts.js')

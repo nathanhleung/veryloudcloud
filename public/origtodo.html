@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html ng-app="simpleTodo">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<title>simpleTodo</title>
+		
+		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+		<link href="styles/styles.less" rel="stylesheet/less">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js"></script>
+		<script src="js/modules/todo/services/todos.js"></script>
+		<script src="js/modules/todo/controllers/main.js"></script>
+		<script src="js/modules/todo/core.js"></script>
+	</head>
+<body ng-controller="mainController">
+
+  <div class="container">
+		<img src="http://2.bp.blogspot.com/-WEvY79nRftg/VOJ7YxIORDI/AAAAAAAAA58/ealr1TvMCLo/s1600/VeryLoudCloud.png" id="logo" class="img-responsive">
+	  <div class="jumbotron text-center">
+		  <h1>Todo List <span class="label label-info">{{ todos.length }}</span></h1>
+			<button type="button" class="btn btn-danger btn-lg" ng-click="deleteTodo('all')">Delete All</button>
+		</div>
+		
+		<div id="todo-list" class="row">
+		  <div class="col-sm-4 col-sm-offset-4">
+			  <div class="checkbox" ng-repeat="todo in todos">
+				  <label>
+					  <input type="checkbox" ng-click="deleteTodo(todo._id)"> {{ todo.text }}
+					</label>
+				</div>
+			</div>
+		</div>
+		
+		<div id="todo-form" class="row">
+		  <div class="col-sm-8 col-sm-offset-2 text-center">
+			  <form>
+				  <div class="form-group">
+					  <input type="text" class="form-control input-lg text-center" id="todo-input" placeholder="Make todo app" ng-model="formData.text">
+					</div>
+					<button type="submit" class="btn btn-primary btn-lg" ng-click="createTodo()">Add #{{ todos.length + 1 }}</button>
+				</form>
+			</div>
+		</div>
+		
+		<div id="chatbox">
+			<div id="chats-container">
+				<p id="chat-header">Chat <span class="small"><span id="online-count">1</span> online</span></p>
+				<ul id="chats">
+				</ul>
+			</div>
+			<form id="chat-box-form">
+				<div class="input-group" id="chat-input-group">
+					<input id="chat-input" class="form-control" type="text" placeholder="Enter message">
+					<span class="input-group-btn">
+						<button id="chat-send-btn" class="btn btn-success" type="submit">Send</button>
+					</span>
+				</div>
+			</form>
+		</div>
+		
+		<div class="modal fade" id="chatboxRegisterModal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<form id="nick-register-form">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title" id="chatboxRegisterModalLabel">Register</h4>
+						</div>
+						<div class="modal-body">
+							<input type="text" class="form-control" id="nick-register-input" placeholder="Enter nickname">
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+							<button type="submit" class="btn btn-primary">Save Nickname</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	<!-- this should be removed in production -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.4.0/less.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		var chatbox = $('#chatbox');
+		$('#chat-header').click(function() {
+			if (chatbox.hasClass('registered')) {
+				if (chatbox.hasClass('open')) {
+					chatbox.removeClass('open');
+				} else {
+					chatbox.addClass('open');
+					$('#chats-container').scrollTop(1E10);
+				}
+			} else {
+				$('#chatboxRegisterModal').modal('show');
+			}
+		});
+	</script>
+	<script>
+		var socket = io();
+		socket.on('connection count', function(count) {
+			$('#online-count').html(count);
+		});
+		var nick;
+		$('#nick-register-form').submit(function() {
+			nick = $('#nick-register-input').val();
+		  socket.emit('nick register', nick);
+			chatbox.addClass('registered open');
+			$('#chatboxRegisterModal').modal('hide');
+			return false;
+		});
+		$('#chat-box-form').submit(function() {
+		  socket.emit('chat message', nick + ": " + $('#chat-input').val());
+			$('#chat-input').val('');
+			return false;
+		});
+		socket.on('chat message', function(msg) {
+			$('#chats').append($('<li>').text(msg));
+			// scroll to bottom after message is added
+			$('#chats-container').scrollTop(1E10);
+		});
+		socket.on('connect message', function(msg) {
+			$('#chats').append($('<li class="connect-msg">').text(msg));
+			// scroll to bottom after message is added
+			$('#chats-container').scrollTop(1E10);
+		});
+		socket.on('nick register', function(nick) {
+			$('#chats').append($('<li class="connect-msg">').text(nick));
+			// scroll to bottom after message is added
+			$('#chats-container').scrollTop(1E10);
+		});
+	</script>
+	</body>
+</html>

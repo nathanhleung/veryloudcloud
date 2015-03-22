@@ -1,0 +1,110 @@
+doctype html
+html(ng-app='simpleTodo')
+	head
+		meta(charset='utf-8')
+		meta(name='viewport', content='width=device-width, initial-scale=1')
+		
+		title Todo List
+		
+		link(href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css', rel='stylesheet')
+		link(href='styles/styles.less', rel='stylesheet/less')
+		
+		script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
+		script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js')
+		script(src='js/modules/todo/services/todos.js')
+		script(src='js/modules/todo/controllers/main.js')
+		script(src='js/modules/todo/core.js')
+	body(ng-controller='mainController')
+		nav.navbar-default.navbar-fixed-top
+			div.container-fluid
+				div.navbar-header
+					button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar-content')
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+					a.navbar-brand(href='#')
+						img(src='http://i.imgur.com/rUiusmt.png?2')
+				div.collapse.navbar-collapse#navbar-content
+					ul.nav.navbar-nav
+						li
+							a(href='/') Home
+						li.active
+							a(href='#') Todo List
+						if user && user.role === 'administrator'
+							li.dropdown
+								a.dropdown-toggle(href='#', data-toggle='dropdown') Admin
+									span.caret
+								ul.dropdown-menu
+									li
+										a(href='/admin') Admin Dashboard
+									li
+										a(href='/admin/users') User Control
+									li
+										a(href='/admin/classes') Class Control
+							
+					ul.nav.navbar-nav.navbar-right
+						if user
+							li.dropdown
+								a.dropdown-toggle(href='#', data-toggle='dropdown') #{user.firstName} #{user.lastName} 
+									span.caret
+								ul.dropdown-menu
+									li
+										a(href='/account') My Account
+									li
+										a(href='/signout') Sign Out
+						else
+							li
+								a(href='/register') Register
+							li
+								a(href='/login') Login
+		div.container
+			div.jumbotron.text-center
+				br
+				div.alert.alert-warning If anything doesn't work, could yout tell Nathan so then he can attempt to fix it?
+				h1 Todo List 
+					span.label.label-info {{ todos.length }}
+				button.btn.btn-danger.waves-effect.waves-light.btn-lg(type='button', ng-click='deleteTodo()') Delete All
+			
+			div.row#todo-list
+				div.col-sm-4.col-sm-offset-4
+					div.checkbox(ng-repeat='todo in todos')
+						input(type='checkbox', ng-click='deleteTodo(todo._id)', id='{{todo._id}}' autofocus)
+						label(for='{{todo._id}}') {{ todo.todo[0].text }}
+			
+			div.row#todo-form
+				div.col-sm-8.col-sm-offset-2.text-center
+					form(ng-submit='createTodo()')
+						div.form-group
+							input.form-control.input-lg.text-center#todo-input(type='text', placeholder='Do my homework', ng-model='formData.text', required)
+						button.btn.btn-primary.waves-effect.waves-light.btn-lg(type='submit') Add &#x23;{{ todos.length + 1 }}
+						
+			div#chatbox
+				div#chats-container
+					p#chat-header Chat 
+						span.small
+							span#online-count 1
+							|  online
+					ul#chats
+				form#chat-box-form
+					div.input-group#chat-input-group
+						input.form-control#chat-input(placeholder='Enter message')
+						span.input-group-btn
+							button.btn.btn-success.waves-effect.waves-light#chat-send-btn(type='submit') Send
+							
+			div.modal.fade#chatboxRegisterModal(tabindex='-1')
+				div.modal-dialog
+					div.modal-content
+						form#nick-register-form
+							div.modal-header
+								button.close(type='button', data-dismiss='modal') &times;
+								h4.modal-title#chatboxRegisterModalLabel Register
+							div.modal-body
+								input.form-control#nick-register-input(type='text', placeholder='Enter nickname')
+							div.modal-footer
+								button.btn.btn-default(type='button', data-dismiss='modal') Cancel
+								button.btn.btn-primary.waves-effect.waves-light(type='submit') Save Nickname
+								
+		script(src='https://cdnjs.cloudflare.com/ajax/libs/less.js/2.4.0/less.min.js')
+		script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js')
+		script(src='/socket.io/socket.io.js')
+		script(src='/js/scripts.js')

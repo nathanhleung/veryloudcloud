@@ -1,0 +1,50 @@
+extends ../layout
+
+block title
+	| Teacher Dashboard
+	
+block head-links
+	script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
+	script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js')
+	script(src='/js/modules/teacher/services/users.js')
+	script(src='/js/modules/teacher/services/classes.js')
+	script(src='/js/modules/teacher/services/assignments.js')
+	script(src='/js/modules/teacher/controllers/main.js')
+	script(src='/js/modules/teacher/core.js')
+
+block nav-links
+	li
+		a(href='/') Home
+	li
+		a(href='/todos') Todo List
+	li.dropdown
+		a.dropdown-toggle(href='#', data-toggle='dropdown') Teacher
+			span.caret
+		ul.dropdown-menu
+			li
+				a(href='/teacher') Teacher Dashboard
+			li
+				a(href='/teacher/classes') Classes
+			li
+				a(href='/teacher/students') Student Overview / Grades
+
+block content
+	div.jumbotron(ng-app='teacherPage', ng-controller='classController')
+		div.container
+			h1.text-center Teacher Dashboard
+			div.row
+				div.col-md-4
+					h2 Classes 
+						span.label.label-info {{classes.length}}
+					table.table
+						thead
+							tr
+								th Class Name
+								th Students
+								th Class Details
+						tbody
+							tr(ng-repeat='class in classes')
+								td {{ class.className }}
+								td {{ class.students.length }}
+								td
+									a.btn.btn-info.waves-effect.waves-light(ng-href='/teacher/classes/{{class._id}}') #[span.glyphicon.glyphicon-search]

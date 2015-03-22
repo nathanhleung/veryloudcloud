@@ -1,0 +1,102 @@
+extends ../layout
+
+block title
+	| View Class
+	
+block head-links
+	script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
+	script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js')
+	script(src='/js/modules/teacher/services/users.js')
+	script(src='/js/modules/teacher/services/assignments.js')
+	script(src='/js/modules/teacher/services/classes.js')
+	script(src='/js/modules/teacher/controllers/main.js')
+	script(src='/js/modules/teacher/core.js')
+
+block nav-links
+	if user
+		li.active
+			a(href='/') Home
+		li.disabled
+			a Todo List
+		li.dropdown
+			a.dropdown-toggle(href='#', data-toggle='dropdown') Teacher
+				span.caret
+			ul.dropdown-menu
+				li
+					a(href='/teacher') Teacher Dashboard
+				li
+					a(href='/teacher/classes') Classes
+				li
+					a(href='/teacher/students') Student Overview / Grades
+
+block content
+	div.jumbotron(ng-app='teacherPage')
+		div.container
+			div(ng-controller='classController')
+				h1.text-center {{ class[0].className }} #[span.small {{class[0].department}}]
+				h2.text-center Taught by {{ class[0].teacher }}
+				div.col-md-3
+					h2 Student List
+					div.form-inline(ng-if='class[0].students.length')
+						p Search:
+							input.form-control(ng-model='search.$')
+					p(ng-if='!class[0].students.length') No students yet.
+					table.table.table-bordered(ng-if='class[0].students.length')
+						thead
+							tr
+								th
+									a(href='', ng-click='predicate="student"') Student Username
+								th
+									a(href='') Student Name
+								th Kick Student
+						tbody
+							tr(ng-repeat='student in class[0].students | filter:search')
+								td {{ student  }}
+								td {{ student.username || "Name not available" }} <!-- use UserService and getUser(); -->
+								td 
+									a(ng-click='kickStudent(student, classId)')
+										span.btn.btn-danger.waves-effect.waves-light #[span.glyphicon.glyphicon-remove]
+			div(ng-controller='assignmentController')
+				div.col-md-6
+					h2 Current Assignments
+					p(ng-if='!assignments.length') No assignments yet.  Add one using the form to the right!
+					table.table.table-bordered(ng-if='assignments.length')
+						thead
+							tr
+								th Delete
+								th
+									a(href='', ng-click='predicate="name"') Assignment Title
+								th Assignment Description
+								th
+									a(href='', ng-click='predicate="dueDate"') Due Date
+								th Link/Download
+						tbody
+							tr(ng-repeat='assignment in assignments | orderBy:predicate')
+								td
+									a.btn.btn-danger.waves-effect.waves-light(ng-click='deleteAssignment(classId, assignment._id)') #[span.glyphicon.glyphicon-remove]
+								td {{ assignment.name }}
+								td(ng-if='assignment.description') {{ assignment.description }}
+								td(ng-if='!assignment.description') No description
+								td {{ formatDate(assignment.dueDate) }}
+								td(ng-if='assignment.link')
+									a.btn.btn-success.waves-effect.waves-light(ng-href='{{assignment.link}}', target='_blank') #[span.glyphicon.glyphicon-save]
+								td(ng-if='!assignment.link') No link
+				div.col-md-3
+					h2 Add Assignment
+					form(name='assignmentForm', ng-submit='createAssignment(assignmentData, classId)')
+						div.form-group
+							label(for='assignmentName') Assignment Name
+							input.form-control#assignmentName(type='text', placeholder='Enter assignment name', ng-model='assignmentData.assignmentName', required)
+						div.form-group
+							label(for='dueDate') Due Date
+							input.form-control#dueDate(type='date', ng-model='assignmentData.dueDate', required)
+						div.form-group
+							label(for='fileLink') Link to File (optional)
+							input.form-control#fileLink(type='url', placeholder='http://example.com/assignment', ng-model='assignmentData.fileLink')
+						div.form-group
+							label(for='fileUpload') Upload File (not available yet)
+							input.form-control#fileUpload(type='file', ng-model='assignmentData.fileUpload', disabled)
+						div.form-group
+							label(for='description') Assignment Description
+							textarea.form-control#description(ng-model='assignmentData.description', placeholder='Assignment Description')
+						button.btn.btn-primary.waves-effect.waves-light.btn-lg(type='submit') Add Assignment

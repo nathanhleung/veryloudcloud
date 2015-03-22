@@ -1,0 +1,22 @@
+extends ../layout
+
+block title
+	| Login
+
+block content
+	div.jumbotron
+		div.container
+			div.col-md-4.col-md-offset-4#login-reg-div
+				h1.text-center Login
+				p.text-danger.text-center #{message}
+				form(action="/login", method="post")
+					div.form-group
+						label(for='username') Username:
+						input.form-control#username(type="text", name="username", placeholder="Enter username", required, autofocus, autocomplete='off')
+						br
+					div.form-group
+						label(for='password') Password:
+						input.form-control#password(type="password", name="password", placeholder="Password", required, autocomplete='off')
+					button.btn.btn-success.waves-effect.waves-light(type="submit") Login &#187;
+				br
+				a(href='/register') Create an account

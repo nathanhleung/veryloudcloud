@@ -1,0 +1,130 @@
+extends layout
+
+block title
+	| Home
+	
+block head-links
+	script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
+	script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js')
+	script(src='/js/modules/student/services/users.js')
+	script(src='/js/modules/student/services/classes.js')
+	script(src='/js/modules/student/services/assignments.js')
+	script(src='/js/modules/student/controllers/main.js')
+	script(src='/js/modules/student/core.js')
+
+block nav-links
+	if user
+		li.active
+			a(href='/') Home
+		li.disabled
+			a Todo List <!-- (href='/todos') -->
+	if user.role === 'student'
+		li.dropdown
+			a.dropdown-toggle(href='#', data-toggle='dropdown') Classes
+				span.caret
+			ul.dropdown-menu
+				li
+					a(href='/classes/enrolled') My Classes
+				li
+					a(href='/classes') Browse Classes
+				li
+					a(href='/calendar') Calendar
+	if user.role === 'teacher'
+		li.dropdown
+			a.dropdown-toggle(href='#', data-toggle='dropdown') Teacher
+				span.caret
+			ul.dropdown-menu
+				li
+					a(href='/teacher') Teacher Dashboard
+				li
+					a(href='/teacher/classes') Classes
+				li
+					a(href='/teacher/students') Student Overview / Grades
+	if user.role === 'administrator'
+		li.dropdown
+			a.dropdown-toggle(href='#', data-toggle='dropdown') Admin
+				span.caret
+			ul.dropdown-menu
+				li
+					a(href='/admin') Admin Dashboard
+				li
+					a(href='/admin/users') User Control
+				li
+					a(href='/admin/classes') Class Control
+
+block content
+	div.jumbotron(ng-app='classesPage')
+		div.container
+			h1 Home
+			div.row
+				div.col-sm-4
+					h2 News
+					div.panel.panel-default
+						div.panel-heading
+							h3.panel-title Apple Watch: how long would it take a Foxconn worker to earn enough for the most expensive?
+						div.panel-body
+							div.col-sm-8
+								p One of the assembly employees hoping to buy an Apple Watch Edition from China would have to pay at least 74,800 yuan ($11,496). On their basic salary it would take 910 days – spending nothing on anything else.	 Apple chief executive Tim Cook, utilising his $1.75m basic pay, would need just over 48 hours to get one from a US store.
+								p.text-right &mdash; Source: #[a(href='http://www.theguardian.com/news/datablog/2015/mar/11/how-long-foxconn-worker-earn-luxury-apple-watch') The Guardian]
+							div.col-sm-4
+								img.img-responsive.img-thumbnail(src='http://store.storeimages.cdn-apple.com/4438/as-images.apple.com/is/image/AppleInc/aos/published/images/e/di/edition/case/edition-case-bb-201503?wid=800&hei=500&fmt=jpeg&qlt=95&op_sharpen=0&resMode=bicub&op_usm=0.5,0.5,0,0&iccEmbed=0&layer=comp&.v=1425942068425')
+					div.panel.panel-default
+						div.panel-heading
+							h3.panel-title Iraqi forces take military hospital from ISIS as Tikrit offensive continues
+						div.panel-body
+							div.col-sm-8
+								p Joint Iraqi forces now have control of Tikrit Military Hospital as they continue their offensive to liberate the city from ISIS. 
+								p.text-right &mdash; Source: #[a(href='http://www.cnn.com/2015/03/11/world/iraq-isis-tikrit-duplicate-2/') CNN]
+							div.col-sm-4
+								img.img-responsive.img-thumbnail(src='http://i.imgur.com/wxs95YV.jpg')
+				if user.role !== 'student'
+					div.col-sm-8
+						h2 Analytics
+						p Feature coming soon
+				if user.role === 'student'
+					div.col-sm-4(ng-controller='calendarController')
+						h2 Upcoming Due Dates
+						table.table.table-bordered(ng-if='allAssignments.length')
+							thead#dateHeaders4
+								tr
+									<!-- js generates the week -->
+							tbody#calendar-body
+								tr
+									td
+										div(ng-repeat='assignment in allAssignments')
+											p(ng-if='isInCal(0, formatDate(assignment.dueDate))')
+												a(ng-href='/classes/{{assignment.classId}}') {{ assignment.name }}
+									td
+										div(ng-repeat='assignment in allAssignments')
+											p(ng-if='isInCal(1, formatDate(assignment.dueDate))')
+												a(ng-href='/classes/{{assignment.classId}}') {{ assignment.name }}
+									td
+										div(ng-repeat='assignment in allAssignments')
+											p(ng-if='isInCal(2, formatDate(assignment.dueDate))')
+												a(ng-href='/classes/{{assignment.classId}}') {{ assignment.name }}
+									td
+										div(ng-repeat='assignment in allAssignments')
+											p(ng-if='isInCal(3, formatDate(assignment.dueDate))')
+												a(ng-href='/classes/{{assignment.classId}}') {{ assignment.name }}
+						div.col-md-12.text-right
+							a.btn.btn-info.waves-effect.waves-light.waves-effect.waves-light(href='/calendar') See the full calendar&nbsp;&nbsp;#[span.fa.fa-external-link]
+					div.col-sm-4(ng-controller='classController')
+						h2 Classes
+						p(ng-if='joinedClasses.length === 0') You have no classes.  <a href='/classes'>Join one</a> and start learning today!
+						table.table.table-bordered(ng-if='joinedClasses.length > 0')
+							thead
+								tr
+									th View
+									th Class Name
+									th Teacher Name
+									th Students Enrolled
+									th Department
+							tbody
+								tr(ng-repeat='joinedClass in joinedClasses | filter:searchText')
+									td
+										a.btn.btn-success.waves-effect.waves-light.waves-effect.waves-light(ng-href='/classes/{{joinedClass._id}}')
+											span.glyphicon.glyphicon-search
+									td {{ joinedClass.className  }}
+									td {{ joinedClass.teacher  }}
+									td {{ joinedClass.students.length  }}
+									td {{ joinedClass.department  }}

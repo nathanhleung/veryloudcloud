@@ -1,0 +1,66 @@
+extends layout
+
+block title
+	| My Account
+
+block nav-links
+	li
+		a(href='/') Home
+	li.disabled
+		a Todo List
+	if user.role === 'student'
+		li.dropdown
+			a.dropdown-toggle(href='#', data-toggle='dropdown') Classes
+				span.caret
+			ul.dropdown-menu
+				li
+					a(href='/classes/enrolled') My Classes
+				li
+					a(href='/classes') Browse Classes
+				li
+					a(href='/calendar') Calendar
+	if user.role === 'teacher'
+		li.dropdown
+			a.dropdown-toggle(href='#', data-toggle='dropdown') Teacher
+				span.caret
+			ul.dropdown-menu
+				li
+					a(href='/teacher') Teacher Dashboard
+				li
+					a(href='/teacher/classes') Classes
+				li
+					a(href='/teacher/students') Student Overview / Grades
+	if user.role === 'administrator'
+		li.dropdown
+			a.dropdown-toggle(href='#', data-toggle='dropdown') Admin
+				span.caret
+			ul.dropdown-menu
+				li
+					a(href='/admin') Admin Dashboard
+				li
+					a(href='/admin/users') User Control
+				li
+					a(href='/admin/classes') Class Control
+
+block content
+	div.jumbotron
+		div.container
+			h1.text-center Account Details
+			br
+			div.col-md-4
+				table.table
+					tr
+						th Username
+						td #{user.username}
+					tr
+						th Email
+						td #{user.email}
+					tr
+						th First Name
+						td #{user.firstName} 
+					tr
+						th Last Name
+						td #{user.lastName}
+					tr
+						th Role
+						td.text-capitalize #{user.role}

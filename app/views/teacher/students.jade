@@ -1,0 +1,64 @@
+extends ../layout
+
+block title
+	| Student Overview
+	
+block head-links
+	script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
+	script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js')
+	script(src='/js/modules/teacher/services/users.js')
+	script(src='/js/modules/teacher/services/classes.js')
+	script(src='/js/modules/teacher/services/assignments.js')
+	script(src='/js/modules/teacher/controllers/main.js')
+	script(src='/js/modules/teacher/core.js')
+
+block nav-links
+	li
+		a(href='/') Home
+	li.disabled
+		a(href='/todos') Todo List
+	li.dropdown.active
+		a.dropdown-toggle(href='#', data-toggle='dropdown') Teacher
+			span.caret
+		ul.dropdown-menu
+			li
+				a(href='/teacher') Teacher Dashboard
+			li
+				a(href='/teacher/classes') Classes
+			li.active
+				a(href='/teacher/students') Student Overview / Grades
+
+block content
+	div.jumbotron(ng-app='teacherPage')
+		div.container
+			h1.text-center Student Overview
+			div.row
+				div.col-md-7(ng-controller='classController')
+					h2 Class List
+					span.help-text Click a class to see the students who are enrolled.
+					br
+					br
+					table.table.table-bordered
+						tr
+							th View Student Roster
+							th
+								a(href='', ng-click='predicate="className"') Class Name
+							th
+								a(href='', ng-click='predicate="students.length"') Students Enrolled
+						tr(ng-repeat='class in classes | orderBy: predicate | filter:search')
+							td
+								a.btn.btn-info.waves-effect.waves-light(ng-href='/teacher/classes/{{class._id}}/students') #[span.glyphicon.glyphicon-search]
+							td {{class.className}}
+							td {{class.students.length}}
+				div.col-md-5
+					h2 Student List
+					ul
+						li(ng-repeat='taughtClass in taughtClasses') {{ taughtClass.students.toString(); }}
+					pre.
+						  // put this in the controller
+							$scope.getStudents = function(classes) {
+								$scope.students = [];
+									angular.forEach(classes, function(value, student) {
+										this.push(value.department);
+									}, $scope.departments);
+								}

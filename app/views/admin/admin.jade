@@ -1,0 +1,38 @@
+extends ../layout
+
+block title
+	| Admin Panel
+	
+block head-links
+	script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
+	script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js')
+	script(src='/js/modules/admin/services/users.js')
+	script(src='/js/modules/admin/services/classes.js')
+	script(src='/js/modules/admin/controllers/main.js')
+	script(src='/js/modules/admin/core.js')
+
+block nav-links
+	li
+		a(href='/') Home
+	li.disabled
+		a Todo List
+	li.dropdown
+		a.dropdown-toggle(href='#', data-toggle='dropdown') Admin
+			span.caret
+		ul.dropdown-menu
+			li.active
+				a(href='/admin') Admin Dashboard
+			li
+				a(href='/admin/users') User Control
+			li
+				a(href='/admin/classes') Class Control
+
+block content
+	div.jumbotron(ng-app='adminPage')
+		div.container
+			h1.text-center Admin Panel
+			div.row
+				div.col-md-6(ng-controller='userController')
+					h2 There are currently #[span.label.label-info {{users.length}}] users
+				div.col-md-6(ng-controller='classController')
+					h2 There are currently #[span.label.label-info {{classes.length}}] classes
