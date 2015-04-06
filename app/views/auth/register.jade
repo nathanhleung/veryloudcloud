@@ -12,7 +12,7 @@ block content
 				form(action='/register', method='post')
 					div.form-group
 						label(for='username') Username
-						input.form-control#username(type='text', name='username', placeholder='Username', required, autofocus)
+						input.form-control#username(type='text', name='username', placeholder='Username', maxlength='16', required, autofocus)
 					div.form-group
 						label(for='password') Password
 						input.form-control#password(type='password', name='password', placeholder='Enter password', required)
