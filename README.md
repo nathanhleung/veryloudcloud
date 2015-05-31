@@ -1,5 +1,5 @@
 # VeryLoudCloud
-A very loud cloud
+Learning/course-management system written using Node.js
 
 ## How to Install
 Assuming you have [MongoDB](https://www.mongodb.org/) and [NodeJS](https://nodejs.org/) installed:
