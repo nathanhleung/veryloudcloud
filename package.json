@@ -3,6 +3,12 @@
   "version": "0.0.0",
   "description": "A learning management system focused on simplicity and ease of use.",
   "main": "server.js",
+  "scripts": {
+    "start": "node server"
+  },
+  "engines": {
+    "node": "v0.10.35"
+  },
   "author": "VeryLoudCloud Systems",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
