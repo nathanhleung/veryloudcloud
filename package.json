@@ -1,6 +1,6 @@
 {
   "name": "VeryLoudCloud",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "A learning management system focused on simplicity and ease of use.",
   "main": "server.js",
   "scripts": {
