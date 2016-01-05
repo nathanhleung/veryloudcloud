@@ -10,7 +10,7 @@ var port = process.env.PORT || 8080;
 
 // setup db
 var mongoose = require('mongoose');
-var database = require('./config/database');
+// var database = require('./config/database');
 
 // setup auth and sessions
 var passport = require('passport');
@@ -28,7 +28,7 @@ app.set('view engine', 'jade');
 var jade = require('jade');
 
 // config
-var db = mongoose.connect(database.url);
+var db = mongoose.connect(process.env.MONGODB_URI);
 
 app.use(express.static(__dirname + '/public'));
 app.use(morgan('dev'));
