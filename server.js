@@ -28,7 +28,11 @@ app.set('view engine', 'jade');
 var jade = require('jade');
 
 // config
-var db = mongoose.connect(database.url);
+mongoose.connect(database.url);
+mongoose.connection.on('error', function(err) {
+  console.log('MongoDB connection error: ' + err);
+  process.exit(1);
+});
 
 app.use(express.static(__dirname + '/public'));
 app.use(morgan('dev'));
