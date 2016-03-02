@@ -10,7 +10,6 @@ var port = process.env.PORT || 8080;
 
 // setup db
 var mongoose = require('mongoose');
-var database = require('./config/database');
 
 // setup auth and sessions
 var passport = require('passport');
@@ -28,7 +27,7 @@ app.set('view engine', 'jade');
 var jade = require('jade');
 
 // config
-mongoose.connect(database.url);
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/simpleTodoDB');
 mongoose.connection.on('error', function(err) {
   console.log('MongoDB connection error: ' + err);
   process.exit(1);
