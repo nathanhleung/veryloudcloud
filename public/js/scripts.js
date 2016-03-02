@@ -13,6 +13,9 @@ $('#chat-header').click(function() {
 		chatbox.addClass('open');
 		$('#chats-container').scrollTop(1E10);
 	}
+	if ($('#chat-header').hasClass('flash-message')) {
+		$('#chat-header').removeClass('flash-message');	
+	}
 	socket.emit('connect message', 'a user has joined');
 });
 // socket.io
@@ -28,6 +31,9 @@ $('#chat-box-form').submit(function() {
 	return false;
 });
 socket.on('chat message', function(msg) {
+	if (!$('#chat-header').hasClass('flash-message') && !chatbox.hasClass('open')) {
+		$('#chat-header').addClass('flash-message');
+	}
 	$('#chats').append($('<li>').text(msg));
 	// scroll to bottom after message is added
 	$('#chats-container').scrollTop(1E10);
