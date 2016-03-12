@@ -61,7 +61,7 @@ block content
 								th
 									a(href='') Student Name
 						tbody
-							tr(ng-repeat='student in class[0].students | filter:search')
+							tr(ng-repeat='student in class[0].students track by $index | filter:search')
 								td {{ student  }}
 								td {{ student.username || "Name not available" }} <!-- use UserService and getUser(); -->
 				div.col-md-6(ng-controller='assignmentController')
