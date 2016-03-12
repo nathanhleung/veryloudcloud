@@ -70,7 +70,7 @@ block content
 						tbody
 							tr(ng-repeat='class in classes | filter:search' ng-if='joinedClassIds.indexOf(class._id) === -1')
 								td
-									a.btn.btn-success.waves-effect.waves-light(ng-click='joinClass(class._id)')
+									a.btn.btn-success.waves-effect.waves-light(ng-click='joinClass(class._id)' ng-disabled='joinedClassIds.indexOf(class._id) >= 0')
 										span.glyphicon.glyphicon-plus
 								td {{ class.className  }}
 								td {{ class.teacher  }}

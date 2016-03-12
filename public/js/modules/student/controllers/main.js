@@ -46,6 +46,12 @@ angular.module('classController', ['classService', 'userService'])
 		
 		
 		$scope.joinClass = function(classId) {
+			// Optimistic update
+			let classObj = $scope.classes.filter((classObj) => {
+				return classObj._id == classId;
+			})[0];
+			$scope.joinedClasses.push(classObj);
+			$scope.joinedClassIds.push(classObj._id);
 			Classes.enroll($scope.username, classId)
 				.success(function(data) {
 					$scope.classes = data;
@@ -54,6 +60,12 @@ angular.module('classController', ['classService', 'userService'])
 		};
 		
 		$scope.leaveClass = function(classId) {
+			// Another optimistic update
+			let classObj = $scope.classes.filter((classObj) => {
+				return classObj._id == classId;
+			})[0];
+			$scope.joinedClasses.splice($scope.joinedClasses.indexOf(classObj), 1);
+			$scope.joinedClassIds.splice($scope.joinedClassIds.indexOf(classObj._id), 1);
 			Classes.leave($scope.username, classId)
 			  .success(function(data) {
 					$scope.classes = data;
